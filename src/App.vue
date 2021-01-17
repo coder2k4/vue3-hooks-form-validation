@@ -4,8 +4,7 @@
 
       <h1>Авторизация</h1>
 
-      <pre>{{ form.email }}</pre>
-      <pre>{{ form.password }}</pre>
+      <pre>{{ form }}</pre>
 
       <div class="form-control" :class="{'invalid' : !form.email.valid}">
         <label for="email">Email</label>
@@ -21,7 +20,7 @@
         <small v-if="form.password.touched && form.password.errors.minLength">Минимальная длинна 6 символов. Вы ввели: {{form.password.value.length}}</small>
       </div>
 
-      <button type="submit" class="btn primary">Войти</button>
+      <button type="submit" class="btn primary" :disabled="!form.valid">Войти</button>
 
     </form>
   </div>
@@ -42,14 +41,14 @@ export default {
   setup() {
     const form = useForm({
       email: {
-        value: 'mail@mail.ru',
+        value: '',
         validators: {
           required,
           email,
         }
       },
       password: {
-        value: 'password',
+        value: '',
         validators: {
           required,
           minLength: minLength(6)
