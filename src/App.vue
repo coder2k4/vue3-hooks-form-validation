@@ -4,14 +4,21 @@
 
       <h1>Авторизация</h1>
 
-      <div class="form-control">
+      <pre>{{ form.email }}</pre>
+      <pre>{{ form.password }}</pre>
+
+      <div class="form-control" :class="{'invalid' : !form.email.valid}">
         <label for="email">Email</label>
-        <input type="email" id="email">
+        <input type="email" id="email" v-model="form.email.value" @blur="form.email.blur()">
+        <small v-if="form.email.touched && form.email.errors.required">Пожалуйста заполните поле</small>
+        <small v-else-if="form.email.touched && form.email.errors.email">Некорректный e-mail</small>
       </div>
 
-      <div class="form-control">
+      <div class="form-control" :class="{'invalid' : !form.password.valid}">
         <label for="password">Пароль</label>
-        <input type="password" id="password">
+        <input type="password" id="password" v-model="form.password.value" @blur="form.password.blur()">
+        <small v-if="form.password.touched && form.password.errors.required">Пожалуйста заполните поле</small>
+        <small v-if="form.password.touched && form.password.errors.minLength">Минимальная длинна 6 символов. Вы ввели: {{form.password.value.length}}</small>
       </div>
 
       <button type="submit" class="btn primary">Войти</button>
@@ -26,7 +33,7 @@
 import useForm from "@/hooks/useForm";
 
 const required = val => !!val
-const email = val => val.includes('@')
+const email = val => val.includes('@') && val.includes('.')
 const minLength = minVal => val => val.length >= minVal
 
 export default {
@@ -34,15 +41,13 @@ export default {
 
   setup() {
     const form = useForm({
-
       email: {
         value: 'mail@mail.ru',
         validators: {
           required,
-          email
+          email,
         }
       },
-
       password: {
         value: 'password',
         validators: {
@@ -50,11 +55,11 @@ export default {
           minLength: minLength(6)
         }
       }
-
     })
 
-    function submit() {
+    console.log(form.password)
 
+    function submit() {
     }
 
     return {form, submit}
